@@ -1,0 +1,14 @@
+base
+knitr
+kableExtra
+viridisLite
+viridis
+ggplot2
+tidyverse
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats

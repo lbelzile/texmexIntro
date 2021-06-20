@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>1 Marginal distribution and generalized Pareto tails | Threshold exceedances and multivariate extremes</title>
+<meta name="author" content="Léo Belzile">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.9/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><link rel="stylesheet" href="style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Threshold exceedances and multivariate extremes</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preliminary remarks</a></li>
+<li><a class="active" href="marginal-distribution-and-generalized-pareto-tails.html"><span class="header-section-number">1</span> Marginal distribution and generalized Pareto tails</a></li>
+<li><a class="" href="multivariate-model.html"><span class="header-section-number">2</span> Multivariate model</a></li>
+<li><a class="" href="estimating-the-probability-of-rare-events.html"><span class="header-section-number">3</span> Estimating the probability of rare events</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/lbelzile/texmexIntro">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="marginal-distribution-and-generalized-pareto-tails" class="section level1" number="1">
+<h1>
+<span class="header-section-number">1</span> Marginal distribution and generalized Pareto tails<a class="anchor" aria-label="anchor" href="#marginal-distribution-and-generalized-pareto-tails"><i class="fas fa-link"></i></a>
+</h1>
+<div class="keyidea">
+<ul>
+<li>Fit marginal models with generalized Pareto tails and empirical distribution for the body of the data.</li>
+<li>Pick suitable thresholds for generalized Pareto distribution using diagnostic plots</li>
+</ul>
+</div>
+<p>The conditional extremes model attempts to describe the general behaviour of a <span class="math inline">\(D\)</span> random vector <span class="math inline">\(\boldsymbol{Y}\)</span> when component <span class="math inline">\(Y_j\)</span> exceeds a high threshold <span class="math inline">\(u_j\)</span>. This parallels other multivariate peaks-over-threshold models, including the multivariate generalized Pareto distributions arise as the limiting distribution given that <span class="math inline">\(\max_{j=1}^D Y_j &gt; u_j\)</span> under an hypothesis of regular variation and the <span class="math inline">\(R\)</span>-Pareto processes when <span class="math inline">\(R(\boldsymbol{Y})&gt;u\)</span> for a one-homogeneous functional <span class="math inline">\(R\)</span>.</p>
+<p>Univariate extreme value theory suggests that <span class="math inline">\(Y_j \mid Y_j &gt; u_j\)</span> can be approximated by a generalized Pareto distribution with scale <span class="math inline">\(\tau\)</span> and shape <span class="math inline">\(\xi\)</span> above <span class="math inline">\(u_j\)</span> and we can proceed likewise for other components of <span class="math inline">\(\boldsymbol{Y}\)</span>. However, it is worth keeping in mind that the other components of <span class="math inline">\(\boldsymbol{Y}\)</span> need not be simultaneously large when <span class="math inline">\(Y_j&gt;u_j\)</span>. Rather than specify a parametric model for <span class="math inline">\(Y_k\)</span> <span class="math inline">\((k \neq j)\)</span>, we can use the empirical distribution,
+<span class="math display">\[\begin{align*}
+F^{(k)}_n(y) = n^{-1}\sum_{i=1}^n \mathrm{I}(y \leq y_{ik})
+\end{align*}\]</span>
+or a semiparametric alternative
+<span class="math display">\[\begin{align*}
+\widehat{F}_k(y) = 
+\begin{cases}
+F{(k)}_n(y) &amp; y \leq u_k; \\
+1-\{1-F^{(k)}_n(u_k)\}\left(1+\xi_k\frac{y-u_k}{\tau_k}\right)^{-1/\xi_k}_{+} &amp; y &gt; u_k.
+\end{cases}
+\end{align*}\]</span>
+to model the marginal distribution. This leaves the matter of the dependence structure.</p>
+<div id="threshold-selection" class="section level2" number="1.1">
+<h2>
+<span class="header-section-number">1.1</span> Threshold selection<a class="anchor" aria-label="anchor" href="#threshold-selection"><i class="fas fa-link"></i></a>
+</h2>
+<p>To determine which threshold to select for marginal exceedances, we can produce threshold stability plots: these consist of shape estimates (with pointwise 95% confidence intervals, even if these are presented as bands) over a range of thresholds <span class="math inline">\(u_1 &lt; \cdots &lt; u_m\)</span>. Assuming the generalized Pareto approximation to be adequate at <span class="math inline">\(u_l\)</span>, the estimates should stabilize for thresholds <span class="math inline">\(u_{l+1}, \ldots, u_m\)</span> <span class="citation">(<a href="references.html#ref-Davison:1990" role="doc-biblioref">Davison and Smith 1990</a>)</span>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">thstab</span> <span class="op">&lt;-</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/with.html">with</a></span><span class="op">(</span><span class="va">FortCollins</span>,
+     <span class="fu">texmex</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/texmex/man/gpdRangeFit.html">gpdRangeFit</a></span><span class="op">(</span>
+       data <span class="op">=</span> <span class="va">precip</span>,
+       umin <span class="op">=</span> <span class="fl">20</span>,
+       umax <span class="op">=</span> <span class="fl">50</span>,
+       nint <span class="op">=</span> <span class="fl">10L</span>,
+       penalty <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> 
+     <span class="co"># alternative is 'gaussian', yielding MAP</span>
+<span class="op">)</span>
+<span class="co"># there are two methods for graphics: </span>
+<span class="co"># plots (base R) or ggplot (ggplot2)</span>
+<span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html">wrap_plots</a></span><span class="op">(</span><span class="fu">ggplot</span><span class="op">(</span><span class="va">thstab</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="texmex_files/figure-html/thresh_stab_plots-1.png" alt="Threshold stability plots for adjusted scale (left) and shape parameter (right) for the Fort Collins daily cumulated precipitation." width="85%"><p class="caption">
+(#fig:thresh_stab_plots)Threshold stability plots for adjusted scale (left) and shape parameter (right) for the Fort Collins daily cumulated precipitation.
+</p>
+</div>
+<p>While the shape estimates decrease steadily as we increase the threshold, it seems here that 25mm is a reasonable marginal threshold for rainfall.</p>
+<p>The function <code>mrl</code> produces mean residual life plots <code>ggplot(texmex::mrl(data = precip))</code>, but the literature on graphics suggests the human eye has a much easier time detecting lack of trend than linearity.</p>
+<div class="yourturn">
+<ul>
+<li>Repeat the exercise, this time with daily minimum and maximum temperature.</li>
+<li>For the chosen threshold, fit a generalized Pareto using the function <code>evm</code> with threshold <code>th</code>. You can explore the different methods (maximum likelihood, penalized maximum likelihood, Bayesian estimation with Markov chain Monte Carlo using independent elliptical proposals)</li>
+<li>Produce a quantile-quantile plot to check the goodness of fit (via <code>plot</code> or <code>ggplot</code> for the object returned by <code>evm</code>).</li>
+</ul>
+</div>
+</div>
+<div id="standardization-of-the-margins" class="section level2" number="1.2">
+<h2>
+<span class="header-section-number">1.2</span> Standardization of the margins<a class="anchor" aria-label="anchor" href="#standardization-of-the-margins"><i class="fas fa-link"></i></a>
+</h2>
+<p>The Heffernan-Tawn model describes extremes for standardized data, but there is a direct correspondence between extremes <span class="math inline">\(\{\boldsymbol{Y}: Y_j &gt; u_j\}\)</span> and <span class="math inline">\(\{\boldsymbol{Y}: t_j(Y_j) &gt; t_j(u_j)\}\)</span> for a monotone transformation <span class="math inline">\(t_j\)</span>. The standardization in <span class="citation"><a href="references.html#ref-Heffernan:2004" role="doc-biblioref">Heffernan and Tawn</a> (<a href="references.html#ref-Heffernan:2004" role="doc-biblioref">2004</a>)</span> is to the Gumbel scale, but subsequent work <span class="citation">(<a href="references.html#ref-Keef:2013b" role="doc-biblioref">Keef, Papastathopoulos, and Tawn 2013</a>)</span> suggests a better choice is standard Laplace, i.e., a distribution with double exponential tails that can capture negative and positive dependence.</p>
+<p>The standard Laplace distribution has density <span class="math inline">\(f(x) = \exp(-|x|)/2\)</span> on <span class="math inline">\(\mathbb{R}\)</span> and distribution function
+<span class="math display">\[\begin{align*}
+F(x) = \begin{cases}
+\frac{1}{2}\exp(x) &amp; x &lt; 0, \\
+1-\frac{1}{2}\exp(-x) &amp; x \geq 0.
+\end{cases}
+\end{align*}\]</span>
+Thus, if <span class="math inline">\(Y_1, \ldots, Y_D\)</span> is a random vector with marginal distribution functions <span class="math inline">\(F_1, \ldots, F_D\)</span>, we can make the margins standard Laplace by applying the quantile transformation
+<span class="math display">\[\begin{align*}
+t_k(Y_k) = 
+\begin{cases}
+\log\{2{F}_k(Y_k)\} &amp; {F}_k(Y_k) &lt; 1/2, \\
+-\log[2\{1-{F}_k(Y_k)\}] &amp; {F}_k(Y_k) \geq 1/2,
+\end{cases}
+\qquad k=1, \ldots, D.
+\end{align*}\]</span>
+In practice, we replace the unknown <span class="math inline">\(k\)</span>th marginal distribution function <span class="math inline">\(F_k\)</span> by the semiparametric estimator <span class="math inline">\(\widehat{F}_k\)</span>.</p>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="index.html">Preliminary remarks</a></div>
+<div class="next"><a href="multivariate-model.html"><span class="header-section-number">2</span> Multivariate model</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#marginal-distribution-and-generalized-pareto-tails"><span class="header-section-number">1</span> Marginal distribution and generalized Pareto tails</a></li>
+<li><a class="nav-link" href="#threshold-selection"><span class="header-section-number">1.1</span> Threshold selection</a></li>
+<li><a class="nav-link" href="#standardization-of-the-margins"><span class="header-section-number">1.2</span> Standardization of the margins</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/lbelzile/texmexIntro/blob/master/texmex.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/lbelzile/texmexIntro/edit/master/texmex.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Threshold exceedances and multivariate extremes</strong>" was written by Léo Belzile. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+</html>

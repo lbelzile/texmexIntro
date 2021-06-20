@@ -3,7 +3,7 @@ knit: "bookdown::render_book"
 title: "Threshold exceedances and multivariate extremes"
 author: "Léo Belzile"
 site: bookdown::bookdown_site
-bibliography: ["MATH80667A.bib"]
+bibliography: ["book.bib"]
 biblio-style: "apalike"
 link-citations: true
 description: "This booklet is a web complement to the R tutorial for EVA2021 presentation of the `texmex` package by Southworth, Heffernan and Metcalfe (2020)."
@@ -21,8 +21,8 @@ Download and install [**R** (current version `r version$major`.`r version$minor`
 
 You can install the **R** tutorial using
 
-```{r install_package}
-# install.packages("remotes"
+```{r install_package, eval = FALSE, echo = TRUE}
+# install.packages("remotes")
 remotes::install_github("lbelzile/texmexTutorial")
 ```
 It will install `texmex` and other packages alongside with the `learnr` tutorial.

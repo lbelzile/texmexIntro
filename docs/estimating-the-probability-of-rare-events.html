@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>3 Estimating the probability of rare events | Threshold exceedances and multivariate extremes</title>
+<meta name="author" content="Léo Belzile">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.9/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><link rel="stylesheet" href="style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Threshold exceedances and multivariate extremes</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preliminary remarks</a></li>
+<li><a class="" href="marginal-distribution-and-generalized-pareto-tails.html"><span class="header-section-number">1</span> Marginal distribution and generalized Pareto tails</a></li>
+<li><a class="" href="multivariate-model.html"><span class="header-section-number">2</span> Multivariate model</a></li>
+<li><a class="active" href="estimating-the-probability-of-rare-events.html"><span class="header-section-number">3</span> Estimating the probability of rare events</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/lbelzile/texmexIntro">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="estimating-the-probability-of-rare-events" class="section level1" number="3">
+<h1>
+<span class="header-section-number">3</span> Estimating the probability of rare events<a class="anchor" aria-label="anchor" href="#estimating-the-probability-of-rare-events"><i class="fas fa-link"></i></a>
+</h1>
+<div class="keyidea">
+<ul>
+<li>Estimation of risk measures via Monte Carlo methods: simulate new replicates from the fitted model and compute number of points</li>
+<li>For general risk regions where one or more component can be extreme, we proceed by fitting multiple conditional models</li>
+<li>Entirely empirical approach</li>
+</ul>
+</div>
+<p>The whole point of estimating multivariate model is to estimate the probability of rare events. In general, we can estimate the probability of falling in a risk region <span class="math inline">\(\mathcal{A} \subset\{Y_j &gt; u_j\}\)</span> via Monte Carlo simulations. In <code>texmex</code>, this is achieved with the <code>predict</code> method, which uses the model for simulation.</p>
+<p>Under the hood, the function forms <span class="math inline">\(n\)</span> vectors of residuals
+<span class="math display">\[
+\widehat{\boldsymbol{z}}_{i|j} = y_{ij}^{-\widehat{\boldsymbol{\beta}}_{|j}}\left(\boldsymbol{y}_{i,-j} - \widehat{\boldsymbol{\alpha}}_{|j}y_{ij}\right), \quad (i=1, \ldots, n).
+\]</span></p>
+<p>Then, choosing a threshold <span class="math inline">\(v &gt; u_j\)</span>, we can</p>
+<ol style="list-style-type: decimal">
+<li>Simulate <span class="math inline">\(Y_j \sim \mathsf{Exp}(1) + v\)</span>.</li>
+<li>Sample <span class="math inline">\(\boldsymbol{z}_{|j}\)</span> uniformly from the empirical distribution <span class="math inline">\(\{\widehat{\boldsymbol{z}}_{i|j}\}_{i=1}^n\)</span>.</li>
+<li>Set <span class="math inline">\(\boldsymbol{Y}_{-j}= \widehat{\boldsymbol{\alpha}}Y_j + Y_j^{\widehat{\boldsymbol{\beta}}}\boldsymbol{z}_{|j}\)</span>.</li>
+<li>Back-transform observations to original scale.</li>
+</ol>
+<p>The <code>predict</code> method for objects of class <code>mex</code> and <code>bootmex</code> performs <code>nsim=1000</code> replications by default above <code>pqu=0.99</code>. We may choose the dependence threshold over which to predict the other variables. Note that the bootstrap estimates contain in addition to the quantiles estimated standard error for the conditional mean. For the Fort Collins data, they appear to give much narrower quantile ranges.</p>
+<p>The <code>predict</code> method includes an option <code>smoothZdistribution</code> to perform kernel smoothing for each marginal to remove artefacts. The levels of the conditional quantiles can be changed via the argument <code>probs</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pred_boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
+    <span class="va">bootCondModFit</span>, 
+    pqu <span class="op">=</span> <span class="fl">0.9</span>,  
+    trace <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span>
+<span class="co"># for the `bootmex` object, produces replications </span>
+<span class="co"># for each bootstrap sample</span>
+<span class="va">pred_mex</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">condModFit</span>, pqu <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span>
+<span class="co"># `print` will output conditional mean</span>
+<span class="co"># `summary` gives conditional mean and quantiles</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">pred_mex</span><span class="op">)</span>
+<span class="co">#&gt; predict.mex(object = condModFit, pqu = 0.9)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Conditioned on precip being above its 90th percentile.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Conditional Mean and Quantiles:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;      precip|precip&gt;Q90 maxTemp|precip&gt;Q90 minTemp|precip&gt;Q90</span>
+<span class="co">#&gt; mean              8.99              14.10               3.79</span>
+<span class="co">#&gt; 5%                2.42              -2.25             -11.70</span>
+<span class="co">#&gt; 50%               5.98              14.40               5.56</span>
+<span class="co">#&gt; 95%              27.10              29.50              15.80</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Conditional probability of threshold exceedance:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  P(precip&gt;2.16|precip&gt;Q90) P(maxTemp&gt;30|precip&gt;Q90)</span>
+<span class="co">#&gt;                          1                    0.038</span>
+<span class="co">#&gt;  P(minTemp&gt;12.7778|precip&gt;Q90)</span>
+<span class="co">#&gt;                          0.158</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">pred_boot</span><span class="op">)</span>
+<span class="co">#&gt; predict.mex(object = bootCondModFit, pqu = 0.9, trace = Inf)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Results from 100 bootstrap runs.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Conditioned on precip being above its 90th percentile.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Conditional Mean and Quantiles:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;      precip|precip&gt;Q90 maxTemp|precip&gt;Q90 minTemp|precip&gt;Q90</span>
+<span class="co">#&gt; mean             9.060             13.900              3.480</span>
+<span class="co">#&gt; se               0.397              0.412              0.361</span>
+<span class="co">#&gt; 5%               8.440             13.200              2.900</span>
+<span class="co">#&gt; 50%              9.040             13.900              3.490</span>
+<span class="co">#&gt; 95%              9.790             14.500              4.190</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Conditional probability of threshold exceedance:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  P(precip&gt;2.16|precip&gt;Q90) P(maxTemp&gt;30|precip&gt;Q90)</span>
+<span class="co">#&gt;                          1                   0.0335</span>
+<span class="co">#&gt;  P(minTemp&gt;12.7778|precip&gt;Q90)</span>
+<span class="co">#&gt;                          0.148</span></code></pre></div>
+<p>We can produce plots of <code>predict.mex</code> objects using <code>ggplot</code>. The resulting scatterplots are slightly confusing:</p>
+<ul>
+<li>the orange full line gives the line <span class="math inline">\(t_j(Y_j) = t_k(Y_k)\)</span>; since the data are plotted on the scale <span class="math inline">\((Y_j, Y_k)\)</span> of the data, the line is curved.</li>
+<li>the vertical dashed line represent the dependence threshold</li>
+<li>grey points are original observations</li>
+<li>blue diamonds are new simulated observations from the model for which the simulated conditioning variable <span class="math inline">\(Y_j &gt; Y_k\)</span>; orange circles are simulated points for which <span class="math inline">\(Y_k &gt; Y_j\)</span>.</li>
+</ul>
+<div class="figure" style="text-align: center">
+<img src="texmex_files/figure-html/predict_plots-1.png" alt="Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair." width="85%"><p class="caption">
+(#fig:predict_plots)Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair.
+</p>
+</div>
+<p>Thus, we can see that the simulation scheme produces coherent data in this case. The simulations are stored in <code>pred_mex$data</code>, a list which contains the original data (<code>real</code>), simulated observations on the data scale (<code>simulated</code>) and on the Laplace (<code>transformed</code>) scale.</p>
+<p>We can access these data and compute empirical estimates of probabilities for various sets of interest.</p>
+<div class="yourturn">
+<p>Estimate the probability that the maximum daily temperature is below 30 degrees Celcius if the amount of rainfall is larger than 25 mm.</p>
+</div>
+<div id="self-consistency" class="section level2" number="3.1">
+<h2>
+<span class="header-section-number">3.1</span> Self-consistency<a class="anchor" aria-label="anchor" href="#self-consistency"><i class="fas fa-link"></i></a>
+</h2>
+<p>So far, our model is only valid in the region <span class="math inline">\(Y_j &gt; u_j\)</span>, but more often than not we will be interested in more general events of the form <span class="math inline">\(\{Y_j&gt;u_j, Y_k&gt;u_k\}\)</span>. Depending on the conditioning variable, we could express this in two ways:
+<span class="math display">\[\begin{align*}
+\Pr(Y_k &gt; u_k, Y_j &gt; u_j) &amp;= \Pr(Y_k &gt; u_k \mid Y_j &gt; u_j)\Pr(Y_j &gt; u_j)
+\\&amp; = \Pr(Y_j &gt; u_j \mid Y_k &gt; u_k)\Pr(Y_k &gt; u_k)
+\end{align*}\]</span>
+and if we choose a different conditioning variable, we will obtain different answers. This is one of the major drawback of the approach: it does not readily yield a genuine multivariate model and it is not self-consistent (meaning that the answer to the above question is the same regardless of the conditioning variable if <span class="math inline">\(t_j(u_j) = t_k(u_k)\)</span>). For this to be the case, one would need to enforce additional constraints for <span class="math inline">\(a_{j|k}=a_{k|j}\)</span>, etc.</p>
+</div>
+<div id="glue-together-conditional-models" class="section level2" number="3.2">
+<h2>
+<span class="header-section-number">3.2</span> Glue together conditional models<a class="anchor" aria-label="anchor" href="#glue-together-conditional-models"><i class="fas fa-link"></i></a>
+</h2>
+<p><span class="citation"><a href="references.html#ref-Heffernan:2004" role="doc-biblioref">Heffernan and Tawn</a> (<a href="references.html#ref-Heffernan:2004" role="doc-biblioref">2004</a>)</span> suggest splitting the risk region <span class="math inline">\(\mathcal{A}\)</span> into disjoint sets for exceedances, choosing the conditioning variable with the largest component on the Laplace scale. If we view the model as a mixture with adequate weights, this defines a valid multivariate distribution <span class="citation">(cf. discussion of I. Papastathopoulos in <a href="references.html#ref-Engelke/Hitz:2020" role="doc-biblioref">Engelke and Hitz 2020</a>)</span>, but the model fitting procedure does not factor this into account: it fits the model parameters <span class="math inline">\(\boldsymbol{\alpha}_{|j}\)</span> and <span class="math inline">\(\boldsymbol{\beta}_{|j}\)</span> with all data <span class="math inline">\(\{\boldsymbol{Y}_i: Y_j&gt;u_j\}\)</span>, not just that for which <span class="math inline">\(\{\boldsymbol{Y}_i: Y_j&gt;u_j, t_j(Y_j) &gt; t_k(Y_k), k \neq j\}\)</span>.</p>
+<p>The function <code>mexAll</code> fits all models conditional models together. One can then use <code>mexMonteCarlo</code> to generate points from each of these models, where in each case the <span class="math inline">\(i\)</span>th bootstrap observation is replaced by a sample from the <span class="math inline">\(j\)</span>th conditional extremes model, that is that for which <span class="math inline">\(j\)</span> is the largest standardized component occurs, i.e. <span class="math inline">\(t_j(Y_{ij}) &gt; t_k(Y_{ik})\)</span> for <span class="math inline">\(k \neq j\)</span>.</p>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="multivariate-model.html"><span class="header-section-number">2</span> Multivariate model</a></div>
+<div class="next"><a href="references.html">References</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#estimating-the-probability-of-rare-events"><span class="header-section-number">3</span> Estimating the probability of rare events</a></li>
+<li><a class="nav-link" href="#self-consistency"><span class="header-section-number">3.1</span> Self-consistency</a></li>
+<li><a class="nav-link" href="#glue-together-conditional-models"><span class="header-section-number">3.2</span> Glue together conditional models</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/lbelzile/texmexIntro/blob/master/texmex.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/lbelzile/texmexIntro/edit/master/texmex.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Threshold exceedances and multivariate extremes</strong>" was written by Léo Belzile. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+</html>

@@ -1,5 +1,13 @@
 # Marginal distribution and generalized Pareto tails
 
+```{r loadData, eval = TRUE, echo = FALSE, warning = FALSE, message = FALSE}
+library(texmex)
+library(texmexTutorial,
+        warn.conflicts = FALSE, 
+        quietly = TRUE)
+data("FortCollins", package = "texmexTutorial")
+```
+
 :::keyidea
 
 * Fit marginal models with generalized Pareto tails and empirical distribution for the body of the data.
@@ -58,7 +66,7 @@ The function `mrl` produces mean residual life plots `ggplot(texmex::mrl(data = 
 
 ## Standardization of the margins
 
-The Heffernan-Tawn model describes extremes for standardized data, but there is a direct correspondence between extremes $\{\boldsymbol{Y}: Y_j > u_j\}$ and $\{\boldsymbol{Y}: t_j(Y_j) > t_j(u_j)\}$ for a monotone transformation $t_j$. The standardization in @Heffernan:2004 is to the Gumbel scale, but subsequent work [@Keef:2013] suggests a better choice is standard Laplace, i.e., a distribution with double exponential tails that can capture negative and positive dependence.
+The Heffernan-Tawn model describes extremes for standardized data, but there is a direct correspondence between extremes $\{\boldsymbol{Y}: Y_j > u_j\}$ and $\{\boldsymbol{Y}: t_j(Y_j) > t_j(u_j)\}$ for a monotone transformation $t_j$. The standardization in @Heffernan:2004 is to the Gumbel scale, but subsequent work [@Keef:2013b] suggests a better choice is standard Laplace, i.e., a distribution with double exponential tails that can capture negative and positive dependence.
 
 The standard Laplace distribution has density $f(x) = \exp(-|x|)/2$ on $\mathbb{R}$ and distribution function
 \begin{align*}
@@ -320,7 +328,10 @@ The `predict` method for objects of class `mex` and `bootmex` performs `nsim=100
 The `predict` method includes an option `smoothZdistribution` to perform kernel smoothing for each marginal to remove artefacts. The levels of the conditional quantiles can be changed via the argument `probs`.
 
 ```{r predict_bootmex, echo = TRUE, cache = TRUE}
-pred_boot <- predict(bootCondModFit, pqu = 0.9)
+pred_boot <- predict(
+	bootCondModFit, 
+	pqu = 0.9,	
+	trace = Inf)
 # for the `bootmex` object, produces replications 
 # for each bootstrap sample
 pred_mex <- predict(condModFit, pqu = 0.9)
@@ -364,7 +375,7 @@ and if we choose a different conditioning variable, we will obtain different ans
 
 ## Glue together conditional models
 
-@Heffernan:2004 suggest splitting the risk region $\mathcal{A}$ into disjoint sets for exceedances, choosing the conditioning variable with the largest component on the Laplace scale. If we view the model as a mixture with adequate weights, this defines a valid multivariate distribution [@Papastathopoulos:2020], but the model fitting procedure does not factor this into account: it fits the model parameters $\boldsymbol{\alpha}_{|j}$ and $\boldsymbol{\beta}_{|j}$ with all data $\{\boldsymbol{Y}_i: Y_j>u_j\}$, not just that for which $\{\boldsymbol{Y}_i: Y_j>u_j, t_j(Y_j) > t_k(Y_k), k \neq j\}$.
+@Heffernan:2004 suggest splitting the risk region $\mathcal{A}$ into disjoint sets for exceedances, choosing the conditioning variable with the largest component on the Laplace scale. If we view the model as a mixture with adequate weights, this defines a valid multivariate distribution [cf. discussion of I. Papastathopoulos in @Engelke/Hitz:2020], but the model fitting procedure does not factor this into account: it fits the model parameters $\boldsymbol{\alpha}_{|j}$ and $\boldsymbol{\beta}_{|j}$ with all data $\{\boldsymbol{Y}_i: Y_j>u_j\}$, not just that for which $\{\boldsymbol{Y}_i: Y_j>u_j, t_j(Y_j) > t_k(Y_k), k \neq j\}$.
 
 
-The function `mexAll` fits all models conditional models together. One can then use `mexMonteCarlo` to generate points from each of these models, where in each case the $i$th bootstrap observation is replaced by a sample from the $j$th conditional extremes model, that is that for which $j$ is the largest standardized component occurs, i.e. $t_j(Y_{ij) > t_k(Y_{ik})$ for $k \neq j$.
+The function `mexAll` fits all models conditional models together. One can then use `mexMonteCarlo` to generate points from each of these models, where in each case the $i$th bootstrap observation is replaced by a sample from the $j$th conditional extremes model, that is that for which $j$ is the largest standardized component occurs, i.e. $t_j(Y_{ij}) > t_k(Y_{ik})$ for $k \neq j$.

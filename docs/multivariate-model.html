@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>2 Multivariate model | Threshold exceedances and multivariate extremes</title>
+<meta name="author" content="Léo Belzile">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.9/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><link rel="stylesheet" href="style.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Threshold exceedances and multivariate extremes</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preliminary remarks</a></li>
+<li><a class="" href="marginal-distribution-and-generalized-pareto-tails.html"><span class="header-section-number">1</span> Marginal distribution and generalized Pareto tails</a></li>
+<li><a class="active" href="multivariate-model.html"><span class="header-section-number">2</span> Multivariate model</a></li>
+<li><a class="" href="estimating-the-probability-of-rare-events.html"><span class="header-section-number">3</span> Estimating the probability of rare events</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/lbelzile/texmexIntro">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="multivariate-model" class="section level1" number="2">
+<h1>
+<span class="header-section-number">2</span> Multivariate model<a class="anchor" aria-label="anchor" href="#multivariate-model"><i class="fas fa-link"></i></a>
+</h1>
+<div class="keyidea">
+<ul>
+<li>The multivariate conditional extremes model is a semiparametric regression model given one component is large.</li>
+<li>The model description assumes data are standardised to unit Laplace scale.</li>
+<li>Parameter estimates are obtained under a working assumption of normality and independence between components.</li>
+<li>Diagnostic plots for the models:
+<ul>
+<li>threshold stability for dependence parameters</li>
+<li>tail correlation <span class="math inline">\(\chi(u)\)</span>: agreement between empirical estimates and fitted <span class="math inline">\(\chi(u)\)</span> curve</li>
+<li>regression plots for conditional independence of residuals.</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>The conditional multivariate extreme model of <span class="citation"><a href="references.html#ref-Heffernan:2004" role="doc-biblioref">Heffernan and Tawn</a> (<a href="references.html#ref-Heffernan:2004" role="doc-biblioref">2004</a>)</span> is of the form
+<span class="math display">\[\begin{align*}
+t(\boldsymbol{Y}_{-j})\mid t_j(Y_j)=t_j(y_j)  \approx \boldsymbol{\alpha}_{|j}t_j(y_j)+t_j(y_j)^{\boldsymbol{\beta}_{|j}}\boldsymbol{Z}
+\end{align*}\]</span>
+with <span class="math inline">\(\boldsymbol{\alpha}_{|j} \in [-1,1]^{D-1}\)</span> and <span class="math inline">\(\boldsymbol{\beta}_{|j} \in [-\infty, 1]^{D-1}\)</span> and <span class="math inline">\(\boldsymbol{Z}\)</span> are unspecified residuals.</p>
+<p>We fit the model under the working assumption that <span class="math inline">\(\boldsymbol{Z} \sim \mathsf{No}_{D-1}(\boldsymbol{\mu}_{|j}, \mathrm{diag}\{\boldsymbol{\sigma}_{|j}^2\})\)</span> with <strong>nuisance parameters</strong> <span class="math inline">\(\boldsymbol{\mu}_{|j}\)</span> and <span class="math inline">\(\boldsymbol{\sigma}^2_{|j}\)</span>. Since each margin is conditionally independent of the others, we can break the optimization in smaller chunks, by estimating each pair <span class="math inline">\(a_{k|j}, b_{k|j}\)</span>, etc. Thus, we fit each of the <span class="math inline">\(D-1\)</span> margins separately with the likelihood derived from
+<span class="math display">\[\begin{align*}
+t_k(Y_k) \mid t(Y_j)=t_j(y_j) \sim \mathsf{No}\left(\alpha_{k|j}t_j(y_j) + t_j(y_j)^{\beta_{k|j}}\mu_{i|j}, t_j(y_j)^{2\beta_{k|j}}\sigma^2_{k|j}\right), \qquad k \neq j,
+\end{align*}\]</span>
+The profile likelihood for the pair (<span class="math inline">\(a_{k|j}\)</span>, <span class="math inline">\(b_{k|j}\)</span>) is easily obtained upon noting that, for the data <span class="math display">\[
+z_{ik} =\frac{t_k(y_{ik}) - \alpha_{k|j}t_j(y_{ij})}{t_j(y_{ij})^{\beta_{k|j}}},
+\]</span>
+the conditional maximum likelihood estimators of <span class="math inline">\(\mu_{k|j}\)</span> and <span class="math inline">\(\sigma^2_{k|j}\)</span> are <span class="math inline">\(\widehat{\mu}_{k|j} \mid (\alpha_{i|j}, \beta_{i|j}) = \overline{z}_{k}\)</span> and <span class="math inline">\(\widehat{\sigma}^2_{k|j}\mid (\alpha_{i|j}, \beta_{i|j}) = n^{-1}\sum_{i=1}^n (z_{ik} - \overline{z}_{k})^2\)</span>.</p>
+<div id="strength-of-extremal-dependence" class="section level2" number="2.1">
+<h2>
+<span class="header-section-number">2.1</span> Strength of extremal dependence<a class="anchor" aria-label="anchor" href="#strength-of-extremal-dependence"><i class="fas fa-link"></i></a>
+</h2>
+<p>Before fitting the Heffernan-Tawn model, we can look at the strength of the extremal dependence between pairs.</p>
+<p>We can first calculate the coefficient of tail dependence <span class="math inline">\(\chi\)</span> and <span class="math inline">\(\overline{\chi}\)</span> to investigate the strength of the extremal dependence.</p>
+<p>The tail correlation coefficient <span class="math inline">\(\chi(u)\)</span> is
+<span class="math display">\[\chi(v)= \frac{\Pr\{F_1(Y_1) &gt; v, F_2(Y_2)&gt;v\}}{1-v}.
+\]</span>
+and if <span class="math inline">\(\chi = \lim_{v \to 1} \chi(v) &gt;0\)</span>, we say that <span class="math inline">\((Y_1, Y_2)\)</span> are asymptotically dependent. Since <span class="math inline">\(\chi=0\)</span> for all asymptotically independent process, this is not useful measure.</p>
+<p>The tail dependence coefficient <span class="citation">(<a href="references.html#ref-Coles:1999" role="doc-biblioref">Coles, Heffernan, and Tawn 1999</a>)</span> <span class="math inline">\(\bar{\chi}\)</span> is estimated using
+<span class="math display">\[\begin{align*}
+\bar{\chi}(v) = \frac{2\log(1-v)}{\log[\Pr\{F_1(Y_1) &gt; v, F_2(Y_2) &gt; v\}}-1
+\end{align*}\]</span>
+for <span class="math inline">\(v \in (0,1)\)</span>, so <span class="math inline">\(\overline{\chi} \in [-1,1]\)</span> and asymptotically dependent processes have <span class="math inline">\(\lim_{v \to 1} \overline{\chi}(v)=1\)</span>. The statistic <span class="math inline">\(\chi\)</span> is only useful when the data are asymptotically dependent, so we normally look first at <span class="math inline">\(\overline{\chi}\)</span> and if the Wald confidence intervals include 1, look at the strength of the dependence using the plot of <span class="math inline">\(\chi\)</span>. The <code>texmex</code> package will gray out the latter if asymptotic dependence is ruled out.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create plot with matrix or data frame</span>
+<span class="co">#  with 2 columns only</span>
+<span class="va">chiplot_13</span> <span class="op">&lt;-</span> 
+  <span class="fu">chi</span><span class="op">(</span><span class="va">FortCollins</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"maxTemp"</span>,<span class="st">"precip"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
+<span class="va">chiplot_23</span> <span class="op">&lt;-</span> 
+  <span class="fu">chi</span><span class="op">(</span><span class="va">FortCollins</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"minTemp"</span>,<span class="st">"precip"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
+
+<span class="co"># Truncated the plots to focus on the upper right tail</span>
+<span class="co"># because most of the rainfall records are zero</span>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">chiplot_13</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.9</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">chiplot_23</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.9</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="texmex_files/figure-html/chi_plots-1.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%"><img src="texmex_files/figure-html/chi_plots-2.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%"><p class="caption">
+(#fig:chi_plots)Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out.
+</p>
+</div>
+<p>The Heffernan-Tawn model implies that <span class="math inline">\(\chi(u)\)</span> for <span class="math inline">\(u&gt;0.5\)</span> and <span class="math inline">\(v=-\log[2\{1-u\}]\)</span> is of the form
+<span class="math display">\[\begin{align}
+\chi(u) = \Pr\{\alpha_{k|j}t_j(Y_j)+t_j(Y_j)^{\beta_{k|j}}Z_{k|j} &gt; v \mid F_j(Y_j) &gt; u\} \label{HTchi}
+\end{align}\]</span>
+so we can estimate empirically the coefficient of tail dependence from the model and use it as a graphical diagnostic.</p>
+<p>The <code>texmex</code> package also includes a multivariate conditional estimator of Spearman’s <span class="math inline">\(\rho\)</span> (linear correlation on the scale of <span class="math inline">\(F_1(Y_1), \ldots, F_D(Y_D)\)</span>).
+The function <code>MCS</code> computes the estimator, whereas <code>bootMCS</code> can be used to get a measure of uncertainty by running a nonparametric bootstrap and computing 95% pointwise confidence intervals.</p>
+<div class="yourturn">
+<ul>
+<li>Repeat the exercise with the <code>minTemp</code>/<code>maxTemp</code> pair.</li>
+<li>What do these sets of plots suggest about the asymptotic regime (asymptotic independence or dependence) and the strength of the dependence?</li>
+</ul>
+</div>
+</div>
+<div id="fitting-the-multivariate-model" class="section level2" number="2.2">
+<h2>
+<span class="header-section-number">2.2</span> Fitting the multivariate model<a class="anchor" aria-label="anchor" href="#fitting-the-multivariate-model"><i class="fas fa-link"></i></a>
+</h2>
+<p>The main function for fitting the conditional extreme value model in <code>texmex</code> is <code>mex</code> which gives the two stage procedure
+and calls internally.</p>
+<ul>
+<li>First, <code>migpd</code> fits a generalized Pareto distribution to each margin. Users must provide
+<ul>
+<li>
+<code>mth</code> or <code>mqu</code>: either the thresholds <span class="math inline">\(u_1, \ldots, u_D\)</span> (argument <code>mth</code>) or else a vector of probability levels <span class="math inline">\(F_1(u_1), \ldots, F_D(u_D)\)</span>
+(argument <code>mqu</code>)</li>
+<li>User can compute the maximum a posteriori (instead of the maximum likelihood estimates) for parameters, with <span class="math inline">\(\log(\tau) \sim \mathsf{No}(0,100)\)</span> independent of <span class="math inline">\(\xi \sim \mathsf{No}(0,0.25)\)</span> as default prior specifications if <code>penality='gaussian'</code> (the default).</li>
+</ul>
+</li>
+<li>These standardized data are fed to <code>mexDependence</code>. The latter has multiple arguments:
+<ul>
+<li>
+<code>which</code>: the column index for the conditioning variable</li>
+<li>
+<code>dqu</code>: the probability level of the marginal quantile at which to specify <span class="math inline">\(t(\boldsymbol{Y}) \mid t_j(Y_j) &gt; t_j(u_j)\)</span>; note that this threshold need not be the same as the marginal threshold for the generalized Pareto.</li>
+<li>
+<code>margins</code> the choice of distribution for the standardisation (default is ‘laplace’)</li>
+<li>
+<code>marTransform</code>: how to model <span class="math inline">\(F_k\)</span> to transforms every component of <span class="math inline">\(\boldsymbol{Y}\)</span> to standard Laplace margins. The default, <code>marTransform="mixture"</code> use the semiparametric transformation (the data are modelled with the empirical distribution below the threshold and with a generalized Pareto above <span class="math inline">\(u\)</span>). The alternative is to use the empirical distribution (<code>marTransform = "empirical"</code>).</li>
+<li>
+<code>constrain</code> whether to impose constraints to improve self-consistency for estimates of <span class="math inline">\(\boldsymbol{a}_{|j}\)</span> and <span class="math inline">\(\boldsymbol{b}_{|j}\)</span>; defaut is <code>TRUE</code>;</li>
+<li>
+<code>PlotLikDo</code> logical; whether to produce a bivariate profile likelihood defined on a curved subset of <span class="math inline">\([-1,1] \times[-\infty, 1]\)</span> if <code>constrain=TRUE</code>.</li>
+</ul>
+</li>
+</ul>
+<p>In general, unless you want to obtain the profile likelihood plot, you could directly use <code>mex</code> which combines these two steps.</p>
+<p>Once we have determined marginal and functional thresholds and the choice of conditioning variable, we can perform all steps at once using <code>mex</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">marg</span> <span class="op">&lt;-</span> 
+  <span class="va">FortCollins</span> <span class="op">%&gt;%</span> 
+  <span class="fu">select</span><span class="op">(</span><span class="op">!</span><span class="va">date</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">migpd</span><span class="op">(</span>
+    mqu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0.9</span>, <span class="fl">3</span><span class="op">)</span>, 
+    penalty <span class="op">=</span> <span class="st">'none'</span>
+    <span class="op">)</span>
+<span class="va">condModFit</span> <span class="op">&lt;-</span> 
+  <span class="fu">mexDependence</span><span class="op">(</span>
+    x <span class="op">=</span> <span class="va">marg</span>,
+    which <span class="op">=</span> <span class="st">"precip"</span>, 
+    dqu <span class="op">=</span> <span class="fl">0.9</span>, 
+    PlotLikDo <span class="op">=</span> <span class="cn">FALSE</span>,
+    PlotLikRange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,
+                        b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">condModFit</span><span class="op">)</span>
+<span class="co">#&gt; mexDependence(x = marg, which = "precip", dqu = 0.9, PlotLikDo = FALSE, </span>
+<span class="co">#&gt;     PlotLikRange = list(a = c(-1, 1), b = c(-3, 1)))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Marginal models:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Dependence model:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Conditioning on precip variable.</span>
+<span class="co">#&gt; Thresholding quantiles for transformed data: dqu = 0.9</span>
+<span class="co">#&gt; Using laplace margins for dependence estimation.</span>
+<span class="co">#&gt; Constrained estimation of dependence parameters using v = 10 .</span>
+<span class="co">#&gt; Log-likelihood = -5996 -6160 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Dependence structure parameter estimates:</span>
+<span class="co">#&gt;   maxTemp minTemp</span>
+<span class="co">#&gt; a  0.0201   0.160</span>
+<span class="co">#&gt; b -0.6488  -0.401</span></code></pre></div>
+<p><img src="texmex_files/figure-html/fit_mex-1.png" width="85%" style="display: block; margin: auto;"><img src="texmex_files/figure-html/fit_mex-2.png" width="85%" style="display: block; margin: auto;"></p>
+<p>We can show that the components <span class="math inline">\(Y_j\)</span> and <span class="math inline">\(Y_k\)</span> are:
+- <strong>asymptotically dependent</strong> only if <span class="math inline">\(\alpha_{k|j}=1\)</span>, <span class="math inline">\(\beta_{k|j}=0\)</span>
+- <strong>asymptotically independent</strong> if <span class="math inline">\(-1&lt;\alpha_{k|j}&lt;1\)</span>
+- positive extremal dependence if <span class="math inline">\(\alpha_{k|j}&gt;0\)</span>
+- negative extremal dependence if <span class="math inline">\(\alpha_{k|j}&lt;0\)</span>
+- near independence if <span class="math inline">\(\alpha_{k|j}=\beta_{k|j}=0\)</span>.
+Negative values of <span class="math inline">\(\beta\)</span> (<span class="math inline">\(b\)</span> in the plots) imply that all if the conditional quantiles of <span class="math inline">\(Y_k\)</span> converge to the same value as <span class="math inline">\(Y_j\)</span>. This is often implausible.</p>
+<div class="yourturn">
+<p>Are the estimates of <span class="math inline">\(\alpha_{k|j}\)</span> and <span class="math inline">\(\beta_{j|j}\)</span> in line with your expectations? Justify your answer.</p>
+</div>
+</div>
+<div id="functionalities-of-mex-and-diagnostic-plots" class="section level2" number="2.3">
+<h2>
+<span class="header-section-number">2.3</span> Functionalities of <code>mex</code> and diagnostic plots<a class="anchor" aria-label="anchor" href="#functionalities-of-mex-and-diagnostic-plots"><i class="fas fa-link"></i></a>
+</h2>
+<p>The output of <code>mex</code> or <code>mexDependence</code> is an object of class <code>mex</code>, for which many <code>S3</code> methods are available (including <code>print</code> and <code>summary</code>). By default the <code>plot</code> (or <code>ggplot</code>) method produce diagnostic plots of</p>
+<ul>
+<li>standardized residuals <span class="math inline">\(\widehat{Z}_k(Y_j)\)</span> against <span class="math inline">\(\widehat{F}_j(Y_j)\)</span> with lowess curve</li>
+<li>absolute value of standardized residuals against <span class="math inline">\(\widehat{F}_j(Y_j)\)</span>
+</li>
+<li>plot of <span class="math inline">\(Y_k\)</span> against <span class="math inline">\(Y_j\)</span> with fitted quantiles</li>
+</ul>
+<p>If there is a trend, this contradicts somewhat the assumption that the residuals <span class="math inline">\(Z\)</span> are independent of the value of <span class="math inline">\(Y_j\)</span>, and perhaps suggest that the threshold used for the dependence is too low.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">condModFit</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="texmex_files/figure-html/diag_mex_plots-1.png" alt="Regression diagnostic plots for the fitted conditional extremes model." width="85%"><p class="caption">
+(#fig:diag_mex_plots)Regression diagnostic plots for the fitted conditional extremes model.
+</p>
+</div>
+</div>
+<div id="uncertainty-quantification" class="section level2" number="2.4">
+<h2>
+<span class="header-section-number">2.4</span> Uncertainty quantification<a class="anchor" aria-label="anchor" href="#uncertainty-quantification"><i class="fas fa-link"></i></a>
+</h2>
+<div class="keyidea">
+<ul>
+<li>Uncertainty quantification is obtained using a semiparametric bootstrap scheme.</li>
+<li>Computationally expensive, replicate every step of the analysis with bootstrap data.</li>
+</ul>
+</div>
+<p>The drawback of the “bricolage” approach for model fitting is that we do not have readily available uncertainty quantification. Heffernan and Tawn address this by devising a semiparametric bootstrap scheme.
+It consists of the following steps:</p>
+<ul>
+<li>obtain nonparametric bootstrap sample (with replacement) from <span class="math inline">\(\{\boldsymbol{Y}_i, \ldots, \boldsymbol{Y}_n\}\)</span>
+</li>
+<li>obtain <span class="math inline">\(D\)</span> samples of size <span class="math inline">\(n\)</span> from the standard Laplace margins <span class="math inline">\(\boldsymbol{Z}^{(b)}\)</span>.</li>
+<li>reorder Laplace observations of each margin so that their rank match that of the nonparametric bootstrap.</li>
+<li>transform observations to the data scale using <span class="math inline">\(\widehat{F}_j^{-1}(\cdot)\)</span> <span class="math inline">\((j=1, \ldots, D)\)</span>
+</li>
+</ul>
+<p>Thus, we have a new dataset from which to estimate the dependence. Rince and repeat every step including</p>
+<ul>
+<li>empirical distribution estimation</li>
+<li>generalized Pareto above threshold</li>
+<li>multivariate model with coefficients</li>
+</ul>
+<p>The <code>bootmex</code> package takes the output of <code>mex</code> or <code>mexDependence</code> and produces <code>R</code> replicates.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">bootCondModFit</span> <span class="op">&lt;-</span> <span class="fu">bootmex</span><span class="op">(</span><span class="va">condModFit</span><span class="op">)</span></code></pre></div>
+<p>So far, we have not assessed the choice of threshold for the procedure. We can produce a threshold stability plot by fitting the model over a range of values of <code>dqu</code> and look at the resulting estimates. This, coupled with some bootstrap replicates, is useful to make sure the optimization algorithm did converge and that the threshold is high enough for the approximation to hold.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">threshold_stab_multi</span> <span class="op">&lt;-</span>
+  <span class="fu">mexRangeFit</span><span class="op">(</span>
+    x <span class="op">=</span> <span class="va">marg</span>, 
+    quantiles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.90</span>, <span class="fl">0.98</span>, by <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span>,
+    which <span class="op">=</span> <span class="st">"precip"</span>, <span class="co">#margin to condition on</span>
+    R <span class="op">=</span> <span class="fl">10L</span>, <span class="co"># number of bootstrap samples</span>
+    trace <span class="op">=</span> <span class="cn">Inf</span>
+  <span class="op">)</span>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">threshold_stab_multi</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="texmex_files/figure-html/threshold_stab_plots-1.png" alt="Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation." width="85%"><p class="caption">
+(#fig:threshold_stab_plots)Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation.
+</p>
+</div>
+<p>We can use the resulting object to produce scatterplots of pairs of parameter estimates for each margin and get bootstrap confidence intervals or standard errors for the parameters.</p>
+<p><code>{r bootstrap_pair_plot, echo = TRUE, cache = TRUE, fig.cap = "Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)."} par(mfrow = c(1,2), bty = "l") plot(bootCondModFit, plot = "dependence")</code></p>
+<div class="yourturn">
+<p>Create a plot of <span class="math inline">\(\chi(u)\)</span> for <span class="math inline">\(u \in [0.8,1]\)</span> and superimpose the curve corresponding to the fitted model and 100 bootstrap curves obtained with <code>bootmex</code>. Do the curves from the fitted model agree with the empirical estimates?</p>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="marginal-distribution-and-generalized-pareto-tails.html"><span class="header-section-number">1</span> Marginal distribution and generalized Pareto tails</a></div>
+<div class="next"><a href="estimating-the-probability-of-rare-events.html"><span class="header-section-number">3</span> Estimating the probability of rare events</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#multivariate-model"><span class="header-section-number">2</span> Multivariate model</a></li>
+<li><a class="nav-link" href="#strength-of-extremal-dependence"><span class="header-section-number">2.1</span> Strength of extremal dependence</a></li>
+<li><a class="nav-link" href="#fitting-the-multivariate-model"><span class="header-section-number">2.2</span> Fitting the multivariate model</a></li>
+<li><a class="nav-link" href="#functionalities-of-mex-and-diagnostic-plots"><span class="header-section-number">2.3</span> Functionalities of mex and diagnostic plots</a></li>
+<li><a class="nav-link" href="#uncertainty-quantification"><span class="header-section-number">2.4</span> Uncertainty quantification</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/lbelzile/texmexIntro/blob/master/texmex.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/lbelzile/texmexIntro/edit/master/texmex.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Threshold exceedances and multivariate extremes</strong>" was written by Léo Belzile. </p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+</html>
