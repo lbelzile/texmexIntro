@@ -1,0 +1,17 @@
+book_filename: "texmexIntro"
+repo: https://github.com/lbelzile/texmexIntro
+output_dir: docs
+language:
+  ui:
+    chapter_name: ""
+delete_merged_file: true
+
+before_chapter_script: "_common.R"
+new_session: yes
+
+rmd_files: [
+  "index.Rmd",
+  "texmex.Rmd",
+  "references.Rmd"
+]
+
