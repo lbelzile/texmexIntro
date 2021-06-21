@@ -322,11 +322,17 @@ ggplot(threshold_stab_multi)
 
 We can use the resulting object to produce scatterplots of pairs of parameter estimates for each margin and get bootstrap confidence intervals or standard errors for the parameters.
 
-```{r bootstrap_pair_plot, echo = TRUE, cache = TRUE,
-fig.cap = "Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)."}
+
+```r
+# ggplot method seems broken...
 par(mfrow = c(1,2), bty = "l")
 plot(bootCondModFit, plot = "dependence")
 ```
+
+<div class="figure" style="text-align: center">
+<img src="texmex_files/figure-html/bootstrap_pair_plot-1.png" alt="Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)." width="85%" />
+<p class="caption">(\#fig:bootstrap_pair_plot)Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red).</p>
+</div>
 
 ::: yourturn
 

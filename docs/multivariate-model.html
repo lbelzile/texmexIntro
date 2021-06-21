@@ -268,7 +268,15 @@ It consists of the following steps:</p>
 </p>
 </div>
 <p>We can use the resulting object to produce scatterplots of pairs of parameter estimates for each margin and get bootstrap confidence intervals or standard errors for the parameters.</p>
-<p><code>{r bootstrap_pair_plot, echo = TRUE, cache = TRUE, fig.cap = "Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)."} par(mfrow = c(1,2), bty = "l") plot(bootCondModFit, plot = "dependence")</code></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># ggplot method seems broken...</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, bty <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">bootCondModFit</span>, plot <span class="op">=</span> <span class="st">"dependence"</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="texmex_files/figure-html/bootstrap_pair_plot-1.png" alt="Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)." width="85%"><p class="caption">
+(#fig:bootstrap_pair_plot)Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red).
+</p>
+</div>
 <div class="yourturn">
 <p>Create a plot of <span class="math inline">\(\chi(u)\)</span> for <span class="math inline">\(u \in [0.8,1]\)</span> and superimpose the curve corresponding to the fitted model and 100 bootstrap curves obtained with <code>bootmex</code>. Do the curves from the fitted model agree with the empirical estimates?</p>
 </div>

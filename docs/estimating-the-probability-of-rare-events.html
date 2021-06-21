@@ -68,7 +68,7 @@
 </ol>
 <p>The <code>predict</code> method for objects of class <code>mex</code> and <code>bootmex</code> performs <code>nsim=1000</code> replications by default above <code>pqu=0.99</code>. We may choose the dependence threshold over which to predict the other variables. Note that the bootstrap estimates contain in addition to the quantiles estimated standard error for the conditional mean. For the Fort Collins data, they appear to give much narrower quantile ranges.</p>
 <p>The <code>predict</code> method includes an option <code>smoothZdistribution</code> to perform kernel smoothing for each marginal to remove artefacts. The levels of the conditional quantiles can be changed via the argument <code>probs</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pred_boot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span>
     <span class="va">bootCondModFit</span>, 
     pqu <span class="op">=</span> <span class="fl">0.9</span>,  
