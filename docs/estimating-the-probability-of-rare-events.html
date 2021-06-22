@@ -129,8 +129,9 @@
 <li>blue diamonds are new simulated observations from the model for which the simulated conditioning variable <span class="math inline">\(Y_j &gt; Y_k\)</span>; orange circles are simulated points for which <span class="math inline">\(Y_k &gt; Y_j\)</span>.</li>
 </ul>
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/predict_plots-1.png" alt="Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair." width="85%"><p class="caption">
-(#fig:predict_plots)Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair.
+<span id="fig:predictPlots"></span>
+<img src="texmex_files/figure-html/predictPlots-1.png" alt="Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair." width="85%"><p class="caption">
+Figure 3.1: Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair.
 </p>
 </div>
 <p>Thus, we can see that the simulation scheme produces coherent data in this case. The simulations are stored in <code>pred_mex$data</code>, a list which contains the original data (<code>real</code>), simulated observations on the data scale (<code>simulated</code>) and on the Laplace (<code>transformed</code>) scale.</p>

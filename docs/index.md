@@ -13,7 +13,7 @@ description: "This booklet is a web complement to the R tutorial for EVA2021 pre
 # Preliminary remarks {-}
 
 
-These notes are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/) and were last compiled on 2021-06-20.
+These notes are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/) and were last compiled on 2021-06-22.
 
 :::codingex
 

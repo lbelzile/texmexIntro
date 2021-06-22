@@ -35,7 +35,7 @@ to model the marginal distribution. This leaves the matter of the dependence str
 
 To determine which threshold to select for marginal exceedances, we can produce threshold stability plots: these consist of shape estimates (with pointwise 95% confidence intervals, even if these are presented as bands) over a range of thresholds $u_1 < \cdots < u_m$. Assuming the generalized Pareto approximation to be adequate at $u_l$, the estimates should stabilize for thresholds $u_{l+1}, \ldots, u_m$ [@Davison:1990].
 
-```{r thresh_stab_plots, echo = TRUE, cache = TRUE, fig.cap = "Threshold stability plots for adjusted scale (left) and shape parameter (right) for the Fort Collins daily cumulated precipitation."}
+```{r threshStabPlots, echo = TRUE, cache = TRUE, fig.cap = "Threshold stability plots for adjusted scale (left) and shape parameter (right) for the Fort Collins daily cumulated precipitation."}
 thstab <- 
   with(FortCollins,
      texmex::gpdRangeFit(
@@ -134,7 +134,7 @@ The tail dependence coefficient [@Coles:1999] $\bar{\chi}$ is estimated using
 \end{align*}
 for $v \in (0,1)$, so $\overline{\chi} \in [-1,1]$ and asymptotically dependent processes have $\lim_{v \to 1} \overline{\chi}(v)=1$.  The statistic $\chi$ is only useful when the data are asymptotically dependent, so we normally look first at $\overline{\chi}$ and if the Wald confidence intervals include 1, look at the strength of the dependence using the plot of $\chi$. The `texmex` package will gray out the latter if asymptotic dependence is ruled out. 
 
-```{r chi_plots, echo = TRUE, eval = TRUE, fig.cap = "Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out."}
+```{r chiPlots, echo = TRUE, eval = TRUE, fig.cap = "Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out."}
 # Create plot with matrix or data frame
 #  with 2 columns only
 chiplot_13 <- 
@@ -148,12 +148,11 @@ ggplot(chiplot_13, xlim = c(0.9,1))
 ggplot(chiplot_23, xlim = c(0.9,1))
 ```
 
-
-The Heffernan-Tawn model implies that $\chi(u)$ for $u>0.5$ and $v=-\log[2\{1-u\}]$ is of the form
+If the conditional extremes model holds, then $t_k(Y_{k}) \mid t_j(Y_{j}) > t_j(u_j)$ can be approximated by $\widetilde{Y}^*_{k|j} \approx \alpha_{k|j}t_j(Y_j)+t_j(Y_j)^{\beta_{k|j}}Z_{k|j}$. We thus obtain a formula for $\chi(v)$ above the dependence threshold $u^{\star}=t_j(u)$, where for any $v^{\star}=-\log\{2\cdot(1-v)\}$ $(v > 0.5)$ such that $v^{\star} > u^{\star}$, we have
 \begin{align}
-\chi(u) = \Pr\{\alpha_{k|j}t_j(Y_j)+t_j(Y_j)^{\beta_{k|j}}Z_{k|j} > v \mid F_j(Y_j) > u\} \label{HTchi}
+\chi(v) = \tfrac{\Pr\{t_j(Y_j) > u^{\star}\}\Pr\{\widetilde{Y}^{\star}_{k|j} > v^{\star}, t_j(Y_j) > v^{\star}, t_j(Y_j) > v^{\star} \mid t_j(Y_j) > u^{\star}\}}{\Pr\{t_j(Y_j) > v^{\star}\}} \label{HTchi}
 \end{align}
-so we can estimate empirically the coefficient of tail dependence from the model and use it as a graphical diagnostic.
+We can estimate empirically the coefficient of tail dependence by resampling values of $Z_{k|j}$. The values are simulation-based, so we can use the average over many replications. This does not factor into account the parameter uncertainty, which would require using the bootstrap.
 
 The `texmex` package also includes a multivariate conditional estimator of Spearman's $\rho$ (linear correlation on the scale of $F_1(Y_1), \ldots, F_D(Y_D)$).
 The function `MCS` computes the estimator, whereas `bootMCS` can be used to get a measure of uncertainty by running a nonparametric bootstrap and computing 95% pointwise confidence intervals.
@@ -209,6 +208,7 @@ print(condModFit)
 ```
 
 We can show that the components $Y_j$ and $Y_k$ are:
+
 - **asymptotically dependent** only if $\alpha_{k|j}=1$, $\beta_{k|j}=0$
 - **asymptotically independent** if $-1<\alpha_{k|j}<1$
     - positive extremal dependence if $\alpha_{k|j}>0$
@@ -232,7 +232,7 @@ The output of `mex` or `mexDependence` is an object of class `mex`, for which ma
 
 If there is a trend, this contradicts somewhat the assumption that the residuals $Z$ are independent of the value of $Y_j$, and perhaps suggest that the threshold used for the dependence is too low.
 
-```{r diag_mex_plots, echo = TRUE, fig.cap = "Regression diagnostic plots for the fitted conditional extremes model."}
+```{r diagMexPlots, echo = TRUE, fig.cap = "Regression diagnostic plots for the fitted conditional extremes model."}
 ggplot(condModFit)
 ```
 
@@ -268,7 +268,7 @@ bootCondModFit <- bootmex(condModFit)
 
 So far, we have not assessed the choice of threshold for the procedure. We can produce a threshold stability plot by fitting the model over a range of values of `dqu` and look at the resulting estimates. This, coupled with some bootstrap replicates, is useful to make sure the optimization algorithm did converge and that the threshold is high enough for the approximation to hold.
 
-```{r threshold_stab_plots, echo = TRUE, fig.cap = "Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation."}
+```{r thresholdStabPlots, echo = TRUE, fig.cap = "Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation."}
 threshold_stab_multi <-
   mexRangeFit(
     x = marg, 
@@ -282,18 +282,12 @@ ggplot(threshold_stab_multi)
 
 We can use the resulting object to produce scatterplots of pairs of parameter estimates for each margin and get bootstrap confidence intervals or standard errors for the parameters.
 
-```{r bootstrap_pair_plot, echo = TRUE, cache = TRUE, fig.cap = "Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)."}
+```{r bootstrapPairsPlot, echo = TRUE, cache = TRUE, fig.cap = "Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)."}
 # ggplot method seems broken...
 par(mfrow = c(1,2), bty = "l")
 plot(bootCondModFit, plot = "dependence")
 ```
 
-::: yourturn
-
-
-Create a plot of $\chi(u)$ for $u \in [0.8,1]$ and superimpose the curve corresponding to the fitted model and 100 bootstrap curves obtained with `bootmex`. Do the curves from the fitted model agree with the empirical estimates?
-
-:::
 
 
 # Estimating the probability of rare events
@@ -349,7 +343,7 @@ We can produce plots of `predict.mex` objects using `ggplot`. The resulting scat
 - blue diamonds are new simulated observations from the model for which the simulated conditioning variable $Y_j > Y_k$; orange circles are simulated points for which $Y_k > Y_j$.
 
 
-```{r predict_plots, fig.cap = "Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair."}
+```{r predictPlots, fig.cap = "Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair."}
 ggplot(pred_mex)
 ```
 

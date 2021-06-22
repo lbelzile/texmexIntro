@@ -47,8 +47,8 @@ patchwork::wrap_plots(ggplot(thstab))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/thresh_stab_plots-1.png" alt="Threshold stability plots for adjusted scale (left) and shape parameter (right) for the Fort Collins daily cumulated precipitation." width="85%" />
-<p class="caption">(\#fig:thresh_stab_plots)Threshold stability plots for adjusted scale (left) and shape parameter (right) for the Fort Collins daily cumulated precipitation.</p>
+<img src="texmex_files/figure-html/threshStabPlots-1.png" alt="Threshold stability plots for adjusted scale (left) and shape parameter (right) for the Fort Collins daily cumulated precipitation." width="85%" />
+<p class="caption">(\#fig:threshStabPlots)Threshold stability plots for adjusted scale (left) and shape parameter (right) for the Fort Collins daily cumulated precipitation.</p>
 </div>
 
 
@@ -150,16 +150,15 @@ ggplot(chiplot_23, xlim = c(0.9,1))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/chi_plots-1.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%" /><img src="texmex_files/figure-html/chi_plots-2.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%" />
-<p class="caption">(\#fig:chi_plots)Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out.</p>
+<img src="texmex_files/figure-html/chiPlots-1.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%" /><img src="texmex_files/figure-html/chiPlots-2.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%" />
+<p class="caption">(\#fig:chiPlots)Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out.</p>
 </div>
 
-
-The Heffernan-Tawn model implies that $\chi(u)$ for $u>0.5$ and $v=-\log[2\{1-u\}]$ is of the form
+If the conditional extremes model holds, then $t_k(Y_{k}) \mid t_j(Y_{j}) > t_j(u_j)$ can be approximated by $\widetilde{Y}^*_{k|j} \approx \alpha_{k|j}t_j(Y_j)+t_j(Y_j)^{\beta_{k|j}}Z_{k|j}$. We thus obtain a formula for $\chi(v)$ above the dependence threshold $u^{\star}=t_j(u)$, where for any $v^{\star}=-\log\{2\cdot(1-v)\}$ $(v > 0.5)$ such that $v^{\star} > u^{\star}$, we have
 \begin{align}
-\chi(u) = \Pr\{\alpha_{k|j}t_j(Y_j)+t_j(Y_j)^{\beta_{k|j}}Z_{k|j} > v \mid F_j(Y_j) > u\} \label{HTchi}
+\chi(v) = \tfrac{\Pr\{t_j(Y_j) > u^{\star}\}\Pr\{\widetilde{Y}^{\star}_{k|j} > v^{\star}, t_j(Y_j) > v^{\star}, t_j(Y_j) > v^{\star} \mid t_j(Y_j) > u^{\star}\}}{\Pr\{t_j(Y_j) > v^{\star}\}} \label{HTchi}
 \end{align}
-so we can estimate empirically the coefficient of tail dependence from the model and use it as a graphical diagnostic.
+We can estimate empirically the coefficient of tail dependence by resampling values of $Z_{k|j}$. The values are simulation-based, so we can use the average over many replications. This does not factor into account the parameter uncertainty, which would require using the bootstrap.
 
 The `texmex` package also includes a multivariate conditional estimator of Spearman's $\rho$ (linear correlation on the scale of $F_1(Y_1), \ldots, F_D(Y_D)$).
 The function `MCS` computes the estimator, whereas `bootMCS` can be used to get a measure of uncertainty by running a nonparametric bootstrap and computing 95% pointwise confidence intervals.
@@ -236,6 +235,7 @@ print(condModFit)
 <img src="texmex_files/figure-html/fit_mex-1.png" width="85%" style="display: block; margin: auto;" /><img src="texmex_files/figure-html/fit_mex-2.png" width="85%" style="display: block; margin: auto;" />
 
 We can show that the components $Y_j$ and $Y_k$ are:
+
 - **asymptotically dependent** only if $\alpha_{k|j}=1$, $\beta_{k|j}=0$
 - **asymptotically independent** if $-1<\alpha_{k|j}<1$
     - positive extremal dependence if $\alpha_{k|j}>0$
@@ -265,8 +265,8 @@ ggplot(condModFit)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/diag_mex_plots-1.png" alt="Regression diagnostic plots for the fitted conditional extremes model." width="85%" />
-<p class="caption">(\#fig:diag_mex_plots)Regression diagnostic plots for the fitted conditional extremes model.</p>
+<img src="texmex_files/figure-html/diagMexPlots-1.png" alt="Regression diagnostic plots for the fitted conditional extremes model." width="85%" />
+<p class="caption">(\#fig:diagMexPlots)Regression diagnostic plots for the fitted conditional extremes model.</p>
 </div>
 
 
@@ -316,8 +316,8 @@ ggplot(threshold_stab_multi)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/threshold_stab_plots-1.png" alt="Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation." width="85%" />
-<p class="caption">(\#fig:threshold_stab_plots)Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation.</p>
+<img src="texmex_files/figure-html/thresholdStabPlots-1.png" alt="Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation." width="85%" />
+<p class="caption">(\#fig:thresholdStabPlots)Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation.</p>
 </div>
 
 We can use the resulting object to produce scatterplots of pairs of parameter estimates for each margin and get bootstrap confidence intervals or standard errors for the parameters.
@@ -330,16 +330,10 @@ plot(bootCondModFit, plot = "dependence")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/bootstrap_pair_plot-1.png" alt="Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)." width="85%" />
-<p class="caption">(\#fig:bootstrap_pair_plot)Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red).</p>
+<img src="texmex_files/figure-html/bootstrapPairsPlot-1.png" alt="Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)." width="85%" />
+<p class="caption">(\#fig:bootstrapPairsPlot)Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red).</p>
 </div>
 
-::: yourturn
-
-
-Create a plot of $\chi(u)$ for $u \in [0.8,1]$ and superimpose the curve corresponding to the fitted model and 100 bootstrap curves obtained with `bootmex`. Do the curves from the fitted model agree with the empirical estimates?
-
-:::
 
 
 # Estimating the probability of rare events
@@ -438,8 +432,8 @@ We can produce plots of `predict.mex` objects using `ggplot`. The resulting scat
 
 
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/predict_plots-1.png" alt="Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair." width="85%" />
-<p class="caption">(\#fig:predict_plots)Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair.</p>
+<img src="texmex_files/figure-html/predictPlots-1.png" alt="Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair." width="85%" />
+<p class="caption">(\#fig:predictPlots)Simulations from the fitted conditional model above the 0.9 quantile (blue or orange) with original data (grey). The orange line indicates equal quantiles for the pair.</p>
 </div>
 
 Thus, we can see that the simulation scheme produces coherent data in this case. The simulations are stored in `pred_mex$data`, a list which contains the original data (`real`), simulated observations on the data scale (`simulated`) and on the Laplace (`transformed`) scale.

@@ -1,3 +1,9 @@
+fig:threshStabPlots
+fig:chiPlots
+fig:diagMexPlots
+fig:thresholdStabPlots
+fig:bootstrapPairsPlot
+fig:predictPlots
 marginal-distribution-and-generalized-pareto-tails
 threshold-selection
 standardization-of-the-margins

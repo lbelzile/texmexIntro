@@ -102,15 +102,16 @@ for <span class="math inline">\(v \in (0,1)\)</span>, so <span class="math inlin
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">chiplot_13</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.9</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">chiplot_23</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.9</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/chi_plots-1.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%"><img src="texmex_files/figure-html/chi_plots-2.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%"><p class="caption">
-(#fig:chi_plots)Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out.
+<span id="fig:chiPlots"></span>
+<img src="texmex_files/figure-html/chiPlots-1.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%"><img src="texmex_files/figure-html/chiPlots-2.png" alt="Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out." width="85%"><p class="caption">
+Figure 2.1: Tail dependence plots for maximum daily temperature (top panel) and minimum daily temperature (bottom panel), conditional on extreme rainfall. The right-hand panel is greyed out if asymptotic dependence has been ruled out.
 </p>
 </div>
-<p>The Heffernan-Tawn model implies that <span class="math inline">\(\chi(u)\)</span> for <span class="math inline">\(u&gt;0.5\)</span> and <span class="math inline">\(v=-\log[2\{1-u\}]\)</span> is of the form
+<p>If the conditional extremes model holds, then <span class="math inline">\(t_k(Y_{k}) \mid t_j(Y_{j}) &gt; t_j(u_j)\)</span> can be approximated by <span class="math inline">\(\widetilde{Y}^*_{k|j} \approx \alpha_{k|j}t_j(Y_j)+t_j(Y_j)^{\beta_{k|j}}Z_{k|j}\)</span>. We thus obtain a formula for <span class="math inline">\(\chi(v)\)</span> above the dependence threshold <span class="math inline">\(u^{\star}=t_j(u)\)</span>, where for any <span class="math inline">\(v^{\star}=-\log\{2\cdot(1-v)\}\)</span> <span class="math inline">\((v &gt; 0.5)\)</span> such that <span class="math inline">\(v^{\star} &gt; u^{\star}\)</span>, we have
 <span class="math display">\[\begin{align}
-\chi(u) = \Pr\{\alpha_{k|j}t_j(Y_j)+t_j(Y_j)^{\beta_{k|j}}Z_{k|j} &gt; v \mid F_j(Y_j) &gt; u\} \label{HTchi}
+\chi(v) = \tfrac{\Pr\{t_j(Y_j) &gt; u^{\star}\}\Pr\{\widetilde{Y}^{\star}_{k|j} &gt; v^{\star}, t_j(Y_j) &gt; v^{\star}, t_j(Y_j) &gt; v^{\star} \mid t_j(Y_j) &gt; u^{\star}\}}{\Pr\{t_j(Y_j) &gt; v^{\star}\}} \label{HTchi}
 \end{align}\]</span>
-so we can estimate empirically the coefficient of tail dependence from the model and use it as a graphical diagnostic.</p>
+We can estimate empirically the coefficient of tail dependence by resampling values of <span class="math inline">\(Z_{k|j}\)</span>. The values are simulation-based, so we can use the average over many replications. This does not factor into account the parameter uncertainty, which would require using the bootstrap.</p>
 <p>The <code>texmex</code> package also includes a multivariate conditional estimator of Spearman’s <span class="math inline">\(\rho\)</span> (linear correlation on the scale of <span class="math inline">\(F_1(Y_1), \ldots, F_D(Y_D)\)</span>).
 The function <code>MCS</code> computes the estimator, whereas <code>bootMCS</code> can be used to get a measure of uncertainty by running a nonparametric bootstrap and computing 95% pointwise confidence intervals.</p>
 <div class="yourturn">
@@ -191,13 +192,23 @@ and calls internally.</p>
 <span class="co">#&gt; a  0.0201   0.160</span>
 <span class="co">#&gt; b -0.6488  -0.401</span></code></pre></div>
 <p><img src="texmex_files/figure-html/fit_mex-1.png" width="85%" style="display: block; margin: auto;"><img src="texmex_files/figure-html/fit_mex-2.png" width="85%" style="display: block; margin: auto;"></p>
-<p>We can show that the components <span class="math inline">\(Y_j\)</span> and <span class="math inline">\(Y_k\)</span> are:
-- <strong>asymptotically dependent</strong> only if <span class="math inline">\(\alpha_{k|j}=1\)</span>, <span class="math inline">\(\beta_{k|j}=0\)</span>
-- <strong>asymptotically independent</strong> if <span class="math inline">\(-1&lt;\alpha_{k|j}&lt;1\)</span>
-- positive extremal dependence if <span class="math inline">\(\alpha_{k|j}&gt;0\)</span>
-- negative extremal dependence if <span class="math inline">\(\alpha_{k|j}&lt;0\)</span>
-- near independence if <span class="math inline">\(\alpha_{k|j}=\beta_{k|j}=0\)</span>.
-Negative values of <span class="math inline">\(\beta\)</span> (<span class="math inline">\(b\)</span> in the plots) imply that all if the conditional quantiles of <span class="math inline">\(Y_k\)</span> converge to the same value as <span class="math inline">\(Y_j\)</span>. This is often implausible.</p>
+<p>We can show that the components <span class="math inline">\(Y_j\)</span> and <span class="math inline">\(Y_k\)</span> are:</p>
+<ul>
+<li>
+<strong>asymptotically dependent</strong> only if <span class="math inline">\(\alpha_{k|j}=1\)</span>, <span class="math inline">\(\beta_{k|j}=0\)</span>
+</li>
+<li>
+<strong>asymptotically independent</strong> if <span class="math inline">\(-1&lt;\alpha_{k|j}&lt;1\)</span>
+<ul>
+<li>positive extremal dependence if <span class="math inline">\(\alpha_{k|j}&gt;0\)</span>
+</li>
+<li>negative extremal dependence if <span class="math inline">\(\alpha_{k|j}&lt;0\)</span>
+</li>
+<li>near independence if <span class="math inline">\(\alpha_{k|j}=\beta_{k|j}=0\)</span>.
+Negative values of <span class="math inline">\(\beta\)</span> (<span class="math inline">\(b\)</span> in the plots) imply that all if the conditional quantiles of <span class="math inline">\(Y_k\)</span> converge to the same value as <span class="math inline">\(Y_j\)</span>. This is often implausible.</li>
+</ul>
+</li>
+</ul>
 <div class="yourturn">
 <p>Are the estimates of <span class="math inline">\(\alpha_{k|j}\)</span> and <span class="math inline">\(\beta_{j|j}\)</span> in line with your expectations? Justify your answer.</p>
 </div>
@@ -217,8 +228,9 @@ Negative values of <span class="math inline">\(\beta\)</span> (<span class="math
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">condModFit</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/diag_mex_plots-1.png" alt="Regression diagnostic plots for the fitted conditional extremes model." width="85%"><p class="caption">
-(#fig:diag_mex_plots)Regression diagnostic plots for the fitted conditional extremes model.
+<span id="fig:diagMexPlots"></span>
+<img src="texmex_files/figure-html/diagMexPlots-1.png" alt="Regression diagnostic plots for the fitted conditional extremes model." width="85%"><p class="caption">
+Figure 2.2: Regression diagnostic plots for the fitted conditional extremes model.
 </p>
 </div>
 </div>
@@ -263,8 +275,9 @@ It consists of the following steps:</p>
   <span class="op">)</span>
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">threshold_stab_multi</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/threshold_stab_plots-1.png" alt="Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation." width="85%"><p class="caption">
-(#fig:threshold_stab_plots)Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation.
+<span id="fig:thresholdStabPlots"></span>
+<img src="texmex_files/figure-html/thresholdStabPlots-1.png" alt="Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation." width="85%"><p class="caption">
+Figure 2.3: Dependence threshold stability plots with 10 bootstrap replicates for the conditional extreme value model fitted above the 0.9 quantile of cumulated daily precipitation.
 </p>
 </div>
 <p>We can use the resulting object to produce scatterplots of pairs of parameter estimates for each margin and get bootstrap confidence intervals or standard errors for the parameters.</p>
@@ -273,12 +286,10 @@ It consists of the following steps:</p>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, bty <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">bootCondModFit</span>, plot <span class="op">=</span> <span class="st">"dependence"</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="texmex_files/figure-html/bootstrap_pair_plot-1.png" alt="Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)." width="85%"><p class="caption">
-(#fig:bootstrap_pair_plot)Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red).
+<span id="fig:bootstrapPairsPlot"></span>
+<img src="texmex_files/figure-html/bootstrapPairsPlot-1.png" alt="Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red)." width="85%"><p class="caption">
+Figure 2.4: Scatterplot of bootstrap parameter estimates for the coefficients of the conditional extreme value model for maximum daily temperature (left) and minimum daily temperature (right) conditional on cumulated daily precipitation. The maximum likelihood estimate for the original data is indicated with the at-sign (red).
 </p>
-</div>
-<div class="yourturn">
-<p>Create a plot of <span class="math inline">\(\chi(u)\)</span> for <span class="math inline">\(u \in [0.8,1]\)</span> and superimpose the curve corresponding to the fitted model and 100 bootstrap curves obtained with <code>bootmex</code>. Do the curves from the fitted model agree with the empirical estimates?</p>
 </div>
 </div>
 </div>
